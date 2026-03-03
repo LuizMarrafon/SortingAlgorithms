@@ -81,7 +81,7 @@ public class Arquivo {
             seekArq(i);
             regi.leDoArq(arquivo);
             menor = regi.getNumero();
-            posmenor = 1;
+            posmenor = i;
             for (int j = i+1; j < tl; j++) {
                 regj.leDoArq(arquivo);
                 if(regj.getNumero() < menor){
@@ -97,6 +97,7 @@ public class Arquivo {
             regmenor.gravaNoArq(arquivo);
         }
     }
+
 
 
 }
