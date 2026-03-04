@@ -71,6 +71,32 @@ public class Arquivo {
         } catch (IOException e)
         { }
     }
+    //tem q testar sla
+    public void insercao_direta(){
+        int tl = filesize();
+        Registro regi = new Registro();
+        Registro regj = new Registro();
+        for (int i = 1; i < tl; i++) {
+            seekArq(i);
+            regi.leDoArq(arquivo);
+            int num = regi.getNumero();
+            int pos = i - 1;
+            seekArq(pos);
+            regj.leDoArq(arquivo);
+            while(pos >= 0 && num < regj.getNumero()){
+                if(regj.getNumero() > regi.getNumero()){
+                    seekArq(pos);
+                    regi.gravaNoArq(arquivo);
+                }
+                pos--;
+                seekArq(pos);
+                regj.leDoArq(arquivo);
+            }
+            seekArq(pos+1);
+            regi.gravaNoArq(arquivo);
+        }
+    }
+
 
     public void selecao_direta(){
         Registro regi = new Registro();
@@ -98,6 +124,125 @@ public class Arquivo {
         }
     }
 
+    public void bubble_sort(){
+        int tl = filesize();
+        Registro regi = new Registro();
+        Registro regj = new Registro();
+        boolean flag = true;
+        while(tl > 1 && flag){
+            flag = false;
+            for (int j = 0; j < tl-1; j++) {
+                seekArq(j);
+                regj.leDoArq(arquivo);
+                seekArq(j+1);
+                regi.leDoArq(arquivo);
+                if(regj.getNumero() > regi.getNumero()){
+                    seekArq(j);
+                    regi.gravaNoArq(arquivo);
+                    seekArq(j+1);
+                    regj.gravaNoArq(arquivo);
+                    flag = true;
+                }
+            }
+            tl--;
+        }
+    }
+
+    public void shake_sort(){
+        int inicio = 0, fim = filesize()-1;
+        Registro regi = new Registro();
+        Registro regj = new Registro();
+        boolean flag = true;
+        while(inicio < fim && flag){
+            flag = false;
+            for (int i = inicio; i < fim; i++) {
+                seekArq(i);
+                regj.leDoArq(arquivo);
+                seekArq(i+1);
+                regi.leDoArq(arquivo);
+                if(regj.getNumero() > regi.getNumero()){
+                    seekArq(i);
+                    regi.gravaNoArq(arquivo);
+                    seekArq(i+1);
+                    regj.gravaNoArq(arquivo);
+                    flag = true;
+                }
+            }
+            fim--;
+            for (int i = fim; i > inicio; i--) {
+                seekArq(i-1);
+                regj.leDoArq(arquivo);
+                seekArq(i);
+                regi.leDoArq(arquivo);
+                if(regj.getNumero() > regi.getNumero()){
+                    seekArq(i-1);
+                    regi.gravaNoArq(arquivo);
+                    seekArq(i);
+                    regj.gravaNoArq(arquivo);
+                    flag = true;
+                }
+            }
+            inicio++;
+        }
+    }
+
+    public int buscaBinaria(int num, int tl){
+        int inicio = 0, fim = tl-1, meio = (inicio + fim)/2;
+        Registro reg = new Registro();
+        seekArq(meio);
+        reg.leDoArq(arquivo);
+        while (inicio != fim && reg.getNumero() != num){
+            if(reg.getNumero() > num )
+                fim = meio - 1;
+            else
+                inicio = meio + 1;
+            meio = (inicio + fim)/2;
+            seekArq(meio);
+            reg.leDoArq(arquivo);
+        }
+        if(num > reg.getNumero())
+            return meio +1;
+        return meio;
+    }
+
+    public void insercao_binaria(){
+        int tl = filesize();
+        int pos;
+        Registro aux = new Registro();
+        Registro reg = new Registro();
+        for (int i = 1; i < tl; i++) {
+            seekArq(i);
+            aux.leDoArq(arquivo);
+            pos = buscaBinaria(aux.getNumero(), i);
+            for (int j = i; j > pos; j--) {
+                seekArq(j-1);
+                reg.leDoArq(arquivo);
+                reg.gravaNoArq(arquivo);
+            }
+            seekArq(pos);
+            aux.gravaNoArq(arquivo);
+        }
+    }
+
+    public void geraArquivoOrdenado() {
+        truncate(0); // limpa o arquivo
+        for (int i = 0; i < 1024; i++) {
+            inserirRegNoFinal(new Registro(i));
+        }
+    }
+    public void geraArquivoReverso() {
+        truncate(0); // limpa o arquivo
+        for (int i = 1023; i >= 0; i--) {
+            inserirRegNoFinal(new Registro(i));
+        }
+    }
+    public void geraArquivoRandomico() {
+        truncate(0); // limpa o arquivo
+        java.util.Random random = new java.util.Random();
+        for (int i = 0; i < 1024; i++) {
+            inserirRegNoFinal(new Registro(random.nextInt(1024)));
+        }
+    }
 
 
 }
