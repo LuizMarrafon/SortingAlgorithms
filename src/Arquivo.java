@@ -224,6 +224,75 @@ public class Arquivo {
         }
     }
 
+    public void heap_sort(){
+        int pai, f1, f2, tl = filesize(), maior;
+        Registro reg1 = new Registro();
+        Registro reg2 = new Registro();
+        while(tl > 1){
+            for(pai = tl/2-1; pai >= 0; pai--){
+                f1 = 2 * pai + 1;
+                f2 = f1 + 1;
+                maior = f1;
+                seekArq(f1);
+                reg1.leDoArq(arquivo);
+                seekArq(f2);
+                reg2.leDoArq(arquivo);
+                if(f2 < tl && reg1.getNumero() < reg2.getNumero())
+                    maior = f2;
+                seekArq(maior);
+                reg2.leDoArq(arquivo);
+                seekArq(pai);
+                reg1.leDoArq(arquivo);
+                if(reg1.getNumero() < reg2.getNumero()){
+                    seekArq(pai);
+                    reg2.gravaNoArq(arquivo);
+                    seekArq(maior);
+                    reg1.gravaNoArq(arquivo);
+                }
+            }
+            seekArq(0);
+            reg1.leDoArq(arquivo);
+            seekArq(tl-1);
+            reg2.leDoArq(arquivo);
+            seekArq(0);
+            reg2.gravaNoArq(arquivo);
+            seekArq(tl-1);
+            reg1.gravaNoArq(arquivo);
+            tl--;
+        }
+    }
+
+    public void shell_sort(){
+        int dist = 1, pos, tl = filesize();
+        Registro reg = new Registro();
+        Registro regdist = new Registro();
+        while(dist > tl)
+            dist = 3 * dist + 1;
+        dist = dist/3;
+        while(dist > 0){
+            for(int i = dist; i < tl; i++){
+                seekArq(i);
+                reg.leDoArq(arquivo);
+                pos = i;
+                seekArq(pos - dist);
+                regdist.leDoArq(arquivo);
+                while(pos >= dist && reg.getNumero() < regdist.getNumero()){
+                    seekArq(pos);
+                    regdist.gravaNoArq(arquivo);
+                    pos = pos - dist;
+                    //tem q olhar isso dps
+                    if(pos >= dist){
+                        seekArq(pos - dist);
+                        regdist.leDoArq(arquivo);
+                    }
+                }
+                seekArq(pos);
+                reg.gravaNoArq(arquivo);
+            }
+            dist = dist/3;
+        }
+    }
+
     public void geraArquivoOrdenado() {
         truncate(0); // limpa o arquivo
         for (int i = 0; i < 1024; i++) {
