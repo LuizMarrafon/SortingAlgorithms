@@ -4,6 +4,7 @@ import java.io.RandomAccessFile;
 public class Arquivo {
     private String nomearquivo;
     private RandomAccessFile arquivo;
+    private int comp, mov;
 
     public Arquivo(String nomearquivo)
     {
