@@ -37,6 +37,14 @@ public class Arquivo {
         return (retorno);
     }
 
+    public void exibir(){
+        Registro aux = new Registro();
+        seekArq(0);
+        while(!eof()){
+            aux.leDoArq(arquivo);
+            System.out.print(aux.getNumero()+" ");
+        }
+    }
     //insere um Registro no final do arquivo, passado por par�metro
     public void inserirRegNoFinal(Registro reg)
     {
@@ -73,26 +81,23 @@ public class Arquivo {
     }
     //tem q testar sla
     public void insercao_direta(){
-        int tl = filesize();
+        int tl = filesize(), pos;
         Registro regi = new Registro();
         Registro regj = new Registro();
         for (int i = 1; i < tl; i++) {
             seekArq(i);
             regi.leDoArq(arquivo);
-            int num = regi.getNumero();
-            int pos = i - 1;
-            seekArq(pos);
+            pos = i;
+            seekArq(pos-1);
             regj.leDoArq(arquivo);
-            while(pos >= 0 && num < regj.getNumero()){
-                if(regj.getNumero() > regi.getNumero()){
-                    seekArq(pos);
-                    regi.gravaNoArq(arquivo);
-                }
-                pos--;
+            while(pos > 0 && regi.getNumero() < regj.getNumero()){
                 seekArq(pos);
+                regj.gravaNoArq(arquivo);
+                pos--;
+                seekArq(pos-1);
                 regj.leDoArq(arquivo);
             }
-            seekArq(pos+1);
+            seekArq(pos);
             regi.gravaNoArq(arquivo);
         }
     }
@@ -215,8 +220,9 @@ public class Arquivo {
             aux.leDoArq(arquivo);
             pos = buscaBinaria(aux.getNumero(), i);
             for (int j = i; j > pos; j--) {
-                seekArq(j-1);
+                seekArq(i-1);
                 reg.leDoArq(arquivo);
+                seekArq(j);
                 reg.gravaNoArq(arquivo);
             }
             seekArq(pos);
@@ -266,7 +272,7 @@ public class Arquivo {
         int dist = 1, pos, tl = filesize();
         Registro reg = new Registro();
         Registro regdist = new Registro();
-        while(dist > tl)
+        while(dist < tl)
             dist = 3 * dist + 1;
         dist = dist/3;
         while(dist > 0){
@@ -280,7 +286,6 @@ public class Arquivo {
                     seekArq(pos);
                     regdist.gravaNoArq(arquivo);
                     pos = pos - dist;
-                    //tem q olhar isso dps
                     if(pos >= dist){
                         seekArq(pos - dist);
                         regdist.leDoArq(arquivo);
@@ -308,8 +313,8 @@ public class Arquivo {
     public void geraArquivoRandomico() {
         truncate(0); // limpa o arquivo
         java.util.Random random = new java.util.Random();
-        for (int i = 0; i < 1024; i++) {
-            inserirRegNoFinal(new Registro(random.nextInt(1024)));
+        for (int i = 0; i < 8; i++) {
+            inserirRegNoFinal(new Registro(random.nextInt(100)));
         }
     }
 
