@@ -9,6 +9,7 @@ void main() {
     //arquivo.shell_sort();
     //arquivo.bubble_sort();
     //arquivo.shake_sort();
+    arquivo.quickSemPivo();
 
     System.out.println();
     arquivo.exibir();

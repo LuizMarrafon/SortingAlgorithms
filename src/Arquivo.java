@@ -299,6 +299,51 @@ public class Arquivo {
         }
     }
 
+    public void quickSemPivo(){
+        quickSP(0, filesize()-1);
+    }
+
+    public void quickSP(int ini, int fim){
+        int i = ini, j = fim;
+        Registro reg1 = new Registro();
+        Registro reg2 = new Registro();
+        boolean flag = true;
+        while(i < j){
+            if(flag){
+                seekArq(i);
+                reg1.leDoArq(arquivo);
+                seekArq(j);
+                reg2.leDoArq(arquivo);
+                while(i < j && reg1.getNumero() <= reg2.getNumero()){
+                    i++;
+                    seekArq(i);
+                    reg1.leDoArq(arquivo);
+                }
+            }
+            else{
+                seekArq(i);
+                reg1.leDoArq(arquivo);
+                seekArq(j);
+                reg2.leDoArq(arquivo);
+                while(i < j && reg2.getNumero() >= reg1.getNumero()){
+                    j--;
+                    seekArq(j);
+                    reg2.leDoArq(arquivo);
+                }
+            }
+            seekArq(i);
+            reg2.gravaNoArq(arquivo);
+            seekArq(j);
+            reg1.gravaNoArq(arquivo);
+            flag = !flag;
+        }
+
+        if(ini < i-1)
+            quickSP(ini, i-1);
+        if(j+1 < fim)
+            quickSP(j+1, fim);
+    }
+
     public void geraArquivoOrdenado() {
         truncate(0); // limpa o arquivo
         for (int i = 0; i < 1024; i++) {
