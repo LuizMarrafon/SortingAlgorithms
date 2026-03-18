@@ -80,6 +80,7 @@ public class Arquivo {
         } catch (IOException e)
         { }
     }
+
     //tem q testar sla
     public void insercao_direta(){
         int tl = filesize(), pos;
@@ -299,18 +300,95 @@ public class Arquivo {
         }
     }
 
+    // ============================= METODOS DE LIVRO ==========================================
+
+    public void countingSort()
+    {
+
+    }
+
+    public void combSort()
+    {
+        Registro regI = new Registro();
+        Registro regG = new Registro();
+        int tl = filesize(), gap = tl, aux;
+        boolean flag = true;
+        double fe = 1.3;
+        while(gap > 1 || flag)
+        {
+            gap = (int)(gap/fe);
+            if(gap < 1)
+                gap = 1;
+
+            flag = false;
+            for (int i = 0; i+gap < tl ; i++)
+            {
+                seekArq(i);
+                regI.leDoArq(arquivo);
+                seekArq(i+gap);
+                regG.leDoArq(arquivo);
+                if(regI.getNumero() > regG.getNumero())
+                {
+                    aux = regI.getNumero();
+                    regI.setNumero(regG.getNumero());
+                    regG.setNumero(aux);
+                    flag = true;
+                }
+            }
+        }
+    }
+
+    public void gnomeSort()
+    {
+        Registro regPos = new Registro();
+        Registro regPosAnt = new Registro();
+        int tl = filesize(), aux, pos=1, posAnt=0;
+        seekArq(posAnt);
+        regPosAnt.leDoArq(arquivo);
+        regPos.leDoArq(arquivo);
+        for(int i = 0; i < tl; i++)
+        {
+            if(pos == 0 || regPos.getNumero() >= regPosAnt.getNumero())
+            {
+                pos++;
+                posAnt++;
+                seekArq(posAnt);
+                regPosAnt.leDoArq(arquivo);
+                regPos.leDoArq(arquivo);
+            }
+            else
+            {
+                regPosAnt.setNumero(regPos.getNumero());
+                seekArq(posAnt);
+                regPosAnt.gravaNoArq(arquivo);
+
+                regPos.setNumero(regPosAnt.getNumero());
+                seekArq(pos);
+                regPos.gravaNoArq(arquivo);
+
+                posAnt--;
+                pos--;
+                seekArq(posAnt);
+                regPosAnt.leDoArq(arquivo);
+                regPos.leDoArq(arquivo);
+            }
+        }
+    }
+
     public void geraArquivoOrdenado() {
         truncate(0); // limpa o arquivo
         for (int i = 0; i < 1024; i++) {
             inserirRegNoFinal(new Registro(i));
         }
     }
+
     public void geraArquivoReverso() {
         truncate(0); // limpa o arquivo
         for (int i = 1023; i >= 0; i--) {
             inserirRegNoFinal(new Registro(i));
         }
     }
+
     public void geraArquivoRandomico() {
         truncate(0); // limpa o arquivo
         java.util.Random random = new java.util.Random();
