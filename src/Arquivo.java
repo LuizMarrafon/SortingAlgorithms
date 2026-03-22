@@ -128,12 +128,15 @@ public class Arquivo
             for (int j = i+1; j < tl; j++)
             {
                 regj.leDoArq(arquivo);
+                comp++;
                 if(regj.getNumero() < menor)
                 {
                     menor = regj.getNumero();
                     posmenor = j;
                 }
             }
+            mov++;
+            mov++;
             seekArq(posmenor);
             regmenor.leDoArq(arquivo);
             seekArq(posmenor);
@@ -158,8 +161,11 @@ public class Arquivo
                 regj.leDoArq(arquivo);
                 seekArq(j+1);
                 regi.leDoArq(arquivo);
+                comp++;
                 if(regj.getNumero() > regi.getNumero())
                 {
+                    mov++;
+                    mov++;
                     seekArq(j);
                     regi.gravaNoArq(arquivo);
                     seekArq(j+1);
@@ -185,8 +191,11 @@ public class Arquivo
                 regj.leDoArq(arquivo);
                 seekArq(i+1);
                 regi.leDoArq(arquivo);
+                comp++;
                 if(regj.getNumero() > regi.getNumero())
                 {
+                    mov++;
+                    mov++;
                     seekArq(i);
                     regi.gravaNoArq(arquivo);
                     seekArq(i+1);
@@ -201,8 +210,11 @@ public class Arquivo
                 regj.leDoArq(arquivo);
                 seekArq(i);
                 regi.leDoArq(arquivo);
+                comp++;
                 if(regj.getNumero() > regi.getNumero())
                 {
+                    mov++;
+                    mov++;
                     seekArq(i-1);
                     regi.gravaNoArq(arquivo);
                     seekArq(i);
@@ -220,8 +232,11 @@ public class Arquivo
         Registro reg = new Registro();
         seekArq(meio);
         reg.leDoArq(arquivo);
+        comp++;
         while (inicio != fim && reg.getNumero() != num)
         {
+            comp++;
+            comp++;
             if(reg.getNumero() > num)
                 fim = meio - 1;
             else
@@ -230,6 +245,7 @@ public class Arquivo
             seekArq(meio);
             reg.leDoArq(arquivo);
         }
+        comp++;
         if(num > reg.getNumero())
             return meio +1;
         return meio;
@@ -248,11 +264,13 @@ public class Arquivo
             pos = buscaBinaria(aux.getNumero(), i);
             for (int j = i; j > pos; j--)
             {
-                seekArq(i-1);
+                mov++;
+                seekArq(j-1);
                 reg.leDoArq(arquivo);
                 seekArq(j);
                 reg.gravaNoArq(arquivo);
             }
+            mov++;
             seekArq(pos);
             aux.gravaNoArq(arquivo);
         }
@@ -273,20 +291,26 @@ public class Arquivo
                 reg1.leDoArq(arquivo);
                 seekArq(f2);
                 reg2.leDoArq(arquivo);
+                comp++;
                 if(f2 < tl && reg1.getNumero() < reg2.getNumero())
                     maior = f2;
                 seekArq(maior);
                 reg2.leDoArq(arquivo);
                 seekArq(pai);
                 reg1.leDoArq(arquivo);
+                comp++;
                 if(reg1.getNumero() < reg2.getNumero())
                 {
+                    mov++;
+                    mov++;
                     seekArq(pai);
                     reg2.gravaNoArq(arquivo);
                     seekArq(maior);
                     reg1.gravaNoArq(arquivo);
                 }
             }
+            mov++;
+            mov++;
             seekArq(0);
             reg1.leDoArq(arquivo);
             seekArq(tl-1);
@@ -319,15 +343,18 @@ public class Arquivo
                 while(pos >= dist && reg.getNumero() < regdist.getNumero())
                 {
                     seekArq(pos);
+                    mov++;
                     regdist.gravaNoArq(arquivo);
                     pos = pos - dist;
                     if(pos >= dist)
                     {
                         seekArq(pos - dist);
+                        mov++;
                         regdist.leDoArq(arquivo);
                     }
                 }
                 seekArq(pos);
+                mov++;
                 reg.gravaNoArq(arquivo);
             }
             dist = dist/3;
@@ -358,6 +385,7 @@ public class Arquivo
                 {
                     i++;
                     seekArq(i);
+                    mov++;
                     regI.leDoArq(arquivo);
                 }
             }
@@ -367,9 +395,12 @@ public class Arquivo
                 {
                     j--;
                     seekArq(j);
+                    mov++;
                     regJ.leDoArq(arquivo);
                 }
             }
+            mov++;
+            mov++;
             seekArq(i);
             regJ.gravaNoArq(arquivo);
             seekArq(j);
@@ -419,7 +450,8 @@ public class Arquivo
 
             if(i <= j)
             {
-
+                mov++;
+                mov++;
                 seekArq(i);
                 regJ.gravaNoArq(arquivo);
                 seekArq(j);
@@ -443,6 +475,8 @@ public class Arquivo
         int j = meio;
         for (int i = 0; i < meio; i++)
         {
+            mov++;
+            mov++;
             seekArq(i);
             reg.leDoArq(arquivo);
             reg.gravaNoArq(arquivo1);
@@ -468,12 +502,14 @@ public class Arquivo
                 reg2.leDoArq(arquivo2.arquivo);
                 if(reg1.getNumero() < reg2.getNumero())
                 {
+                    mov++;
                     seekArq(k++);
                     reg1.gravaNoArq(arquivo);
                     i++;
                 }
                 else
                 {
+                    mov++;
                     seekArq(k++);
                     reg2.gravaNoArq(arquivo);
                     j++;
@@ -482,6 +518,7 @@ public class Arquivo
 
             while(i < seq)
             {
+                mov++;
                 arquivo1.seekArq(i++);
                 reg1.leDoArq(arquivo1.arquivo);
                 seekArq(k++);
@@ -490,6 +527,7 @@ public class Arquivo
 
             while(j < seq)
             {
+                mov++;
                 arquivo2.seekArq(j++);
                 reg2.leDoArq(arquivo2.arquivo);
                 seekArq(k++);
@@ -578,6 +616,7 @@ public class Arquivo
             regAux.leDoArq(arquivo);
             pos = count[regAux.getNumero()] - 1;
             arquivoAux.seekArq(pos);
+            mov++;
             regAux.gravaNoArq(arquivoAux.arquivo);
 
             count[regAux.getNumero()]--;
@@ -590,6 +629,7 @@ public class Arquivo
             arquivoAux.seekArq(i);
             regAux.leDoArq(arquivoAux.arquivo);
 
+            mov++;
             seekArq(i);
             regAux.gravaNoArq(arquivo);
         }
@@ -629,6 +669,8 @@ public class Arquivo
                 regG.leDoArq(arquivo);
                 if(regI.getNumero() > regG.getNumero())
                 {
+                    mov++;
+                    mov++;
                     aux = regI.getNumero();
                     regI.setNumero(regG.getNumero());
                     seekArq(i);
@@ -669,10 +711,12 @@ public class Arquivo
                 aux = regPosAnt.getNumero();
                 regPosAnt.setNumero(regPos.getNumero());
                 seekArq(posAnt);
+                mov++;
                 regPosAnt.gravaNoArq(arquivo);
 
                 regPos.setNumero(aux);
                 seekArq(pos);
+                mov++;
                 regPos.gravaNoArq(arquivo);
 
                 posAnt--;
@@ -759,6 +803,7 @@ public class Arquivo
             pos = count[digito] - 1;
 
             arquivoAux.seekArq(pos);
+            mov++;
             regAux.gravaNoArq(arquivoAux.arquivo);
             count[digito]--;
         }
@@ -771,6 +816,7 @@ public class Arquivo
             regAux.leDoArq(arquivoAux.arquivo);
 
             seekArq(i);
+            mov++;
             regAux.gravaNoArq(arquivo);
         }
 
@@ -846,6 +892,7 @@ public class Arquivo
             reg.leDoArq(arquivo);
             if (intervalo == 0)
             {
+                mov++;
                 reg.gravaNoArq(buckets[0].arquivo);
             }
             else
@@ -853,6 +900,7 @@ public class Arquivo
                 pos = (reg.getNumero() - menor) / intervalo;
                 if (pos >= quantidadeBuckets)
                     pos = quantidadeBuckets - 1;
+                mov++;
                 reg.gravaNoArq(buckets[pos].arquivo);
             }
         }
@@ -870,12 +918,14 @@ public class Arquivo
                 regp.leDoArq(buckets[i].arquivo);
                 while(p > 0 && aux.getNumero() < regp.getNumero())
                 {
+                    mov++;
                     regp.gravaNoArq(buckets[i].arquivo);
                     buckets[i].seekArq(p - 1);
                     regp.leDoArq(buckets[i].arquivo);
                     p--;
                 }
                 buckets[i].seekArq(p);
+                mov++;
                 aux.gravaNoArq(buckets[i].arquivo);
             }
         }
@@ -888,12 +938,29 @@ public class Arquivo
                 Registro aux = new Registro();
                 buckets[i].seekArq(j);
                 aux.leDoArq(buckets[i].arquivo);
+                mov++;
                 aux.gravaNoArq(arquivo);
             }
         }
     }
 
     // ---------------------- TIM --------------------------------
+
+    void initComp(){
+        this.comp = 0;
+    }
+
+    public void initMov(){
+        this.mov = 0;
+    }
+
+    public int getComp(){
+        return this.comp;
+    }
+
+    public int getMov(){
+        return this.mov;
+    }
 
     public void geraArquivoOrdenado()
     {
