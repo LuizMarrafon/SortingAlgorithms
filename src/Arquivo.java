@@ -71,7 +71,6 @@ public class Arquivo {
         { }
     }
 
-
     public void fecharArq()
     {
         try
@@ -304,24 +303,108 @@ public class Arquivo {
 
     public void countingSort()
     {
+        Registro regAux = new Registro();
+        int tl = filesize(), maior, pos;
 
+        // acha o maior numero do arquivo
+        seekArq(0);
+        regAux.leDoArq(arquivo);
+        maior = regAux.getNumero();
+        for (int i = 1; i < tl; i++)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+            if(regAux.getNumero() > maior)
+                maior = regAux.getNumero();
+        }
+
+        // cria um vetor para contar as frequencias dos numero do arquivo
+        int[] count = new int[maior + 1];
+
+        // a quantidade (TL) de elementos dessa lista é maior+1
+        // tem que colocar zero em tds as posicoes
+        for(int i=0; i<maior+1; i++)
+        {
+            count[i] = 0;
+        }
+
+        // efetua a contagem de fato
+        for (int i = 0; i < tl; i++)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+            count[regAux.getNumero()]++;
+        }
+
+        // faz a soma da posicao "x" + "x-1"
+        for(int i = 1; i < maior+1; i++)
+            count[i] = count[i] + count[i - 1];
+
+        // ao fim dessa contagem, os elementos estão me dizendo que
+        // "há X elementos menores ou iguais a Y", sendo que, X e Y:
+        // X = valor da posicao // Y = propria posicao
+
+        // agora tem que criar um novo arquivo que vai receber os valores de fato ordenados, ou seja
+        // esse arquivo final tem o mesmo tamanho q o primeiro arquivo
+        Arquivo arquivoAux = new Arquivo("arqAux.dat");
+        arquivoAux.truncate(0); // limpa esse arq movendo o EOF
+        arquivoAux.truncate(tl); // preenche com lixo os registros p eu poder usar
+
+        // para isso, vai ser uma repeticao que comeca de tras para frente, como vai funcionar a ordenação:
+
+        // sendo que X = valor do primeiro arquivo
+        // vejo qual é o valor do numero que esta na posicao X do vetor, denominando esse valor de Y
+        // coloco o X na posicao Y da terceira lista
+        for (int i = tl - 1; i >= 0; i--)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+            pos = count[regAux.getNumero()] - 1;
+            arquivoAux.seekArq(pos);
+            regAux.gravaNoArq(arquivoAux.arquivo);
+
+            count[regAux.getNumero()]--;
+        }
+
+        // por fim, basta copiar de volta para o arquivo original
+
+        for (int i = 0; i < tl; i++)
+        {
+            arquivoAux.seekArq(i);
+            regAux.leDoArq(arquivoAux.arquivo);
+
+            seekArq(i);
+            regAux.gravaNoArq(arquivo);
+        }
+
+        arquivoAux.fecharArq(); // fecha o arquivo
     }
 
+    // seria uma melhora do bubble sort, pq aumenta o intervalo (gap)
+    // no bolha sempre comparamos elementos vizinhos, ja aqui, podemos
+    // comparar elementos com uma distancia maior entre eles, quem dita isso
+    // é o gap, portanto, se gap == 1, eh literal um bolha
     public void combSort()
     {
         Registro regI = new Registro();
         Registro regG = new Registro();
         int tl = filesize(), gap = tl, aux;
-        boolean flag = true;
-        double fe = 1.3;
+        boolean flag = true; // aparece para controlar se teve troca ou não
+        // é fato que o flag só importa de fato quando gap == 1, mas essa é a inteção mesmo
+        // pq quando gap = 1 o algoritmo vira praticamente um bolha, entao tem q tomar cuidado
+        // para nao deixar ele fazendo comparacoes inuteis
+        double fe = 1.3; // fator de encolhimento, quanto menor, mais iteracoes
         while(gap > 1 || flag)
         {
             gap = (int)(gap/fe);
             if(gap < 1)
                 gap = 1;
 
+            //if(gap == 9 || gap == 10) NÃO é necessário colocar isso, mas segundo o estudo lá fica mais otimizado
+            //    gap = 11;
+
             flag = false;
-            for (int i = 0; i+gap < tl ; i++)
+            for (int i = 0; i+gap < tl; i++)
             {
                 seekArq(i);
                 regI.leDoArq(arquivo);
@@ -331,38 +414,43 @@ public class Arquivo {
                 {
                     aux = regI.getNumero();
                     regI.setNumero(regG.getNumero());
+                    seekArq(i);
+                    regI.gravaNoArq(arquivo);
                     regG.setNumero(aux);
+                    seekArq(i+gap);
+                    regG.gravaNoArq(arquivo);
                     flag = true;
                 }
             }
         }
     }
 
-    public void gnomeSort()
-    {
+    // também bem parecido com o bolha, mas quando efetua a troca
+    // o elemento maior fica "marcado", para comparar os elementos
+    // que vem antes dele e vai comparando de "tras para frente"
+    public void gnomeSort() {
         Registro regPos = new Registro();
-        Registro regPosAnt = new Registro();
-        int tl = filesize(), aux, pos=1, posAnt=0;
+        Registro regPosAnt = new Registro(); // tem q criar o regPosAnt pq la na lista
+        // era duplamente encadeada, daí tinha acesso ao nó anteior, já no arquivo
+        // vou andando com os 2 registros
+        int tl = filesize(), aux, pos = 1, posAnt = 0;
         seekArq(posAnt);
         regPosAnt.leDoArq(arquivo);
         regPos.leDoArq(arquivo);
-        for(int i = 0; i < tl; i++)
-        {
-            if(pos == 0 || regPos.getNumero() >= regPosAnt.getNumero())
-            {
+        while (pos != tl) {
+            if (pos == 0 || regPos.getNumero() >= regPosAnt.getNumero()) {
                 pos++;
                 posAnt++;
                 seekArq(posAnt);
                 regPosAnt.leDoArq(arquivo);
                 regPos.leDoArq(arquivo);
-            }
-            else
-            {
+            } else {
+                aux = regPosAnt.getNumero();
                 regPosAnt.setNumero(regPos.getNumero());
                 seekArq(posAnt);
                 regPosAnt.gravaNoArq(arquivo);
 
-                regPos.setNumero(regPosAnt.getNumero());
+                regPos.setNumero(aux);
                 seekArq(pos);
                 regPos.gravaNoArq(arquivo);
 
@@ -373,6 +461,126 @@ public class Arquivo {
                 regPos.leDoArq(arquivo);
             }
         }
+    }
+
+    // --------------- radix -----------------
+
+    private int contaDigitosNum(int numero)
+    {
+        int contador = 0;
+        if(numero != 0)
+        {
+            while(numero != 0)
+            {
+                numero = numero/10;
+                contador++;
+            }
+            return contador;
+        }
+        return 1; // se o numero for zero retorna q ele tem 1 digito
+    }
+
+    private int obterDigito(int numero, int d)
+    {
+        int divisor = 1;
+
+        for(int i = 1; i < d; i++)
+            divisor = divisor * 10;
+
+        return (numero / divisor) % 10;
+    }
+
+    private void countSortRadix(int d)
+    {
+        Registro regAux = new Registro();
+        int pos, digito, tl = filesize();
+
+        // não preciso achar o maior valor do arquivo inteira, pq
+        // no radix o dígito sempre vai ser de 0 até 9 independente
+        // entao o tamanho do vetor de contagem sempre vai ser de 10 posicoes
+
+        int[] count = new int[10];
+        for(int i = 0; i < 10; i++)
+            count[i] = 0;
+
+        // conto quantas vezes cada digito aparece na casa
+        // "d" passada por parametro pelo radix
+
+        for (int i = 0; i < tl; i++)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+
+            // pego o digito com base no numero do registro e do d
+            digito = obterDigito(regAux.getNumero(), d);
+
+            // segue a logica do counting
+            count[digito]++;
+        }
+
+
+        // segue a logica do counting, q agora tem que fazer a soma
+        for(int i = 1; i < 10; i++)
+            count[i] = count[i] + count[i - 1];
+
+        // agora tem que criar um novo arquivo que vai receber os valores de fato ordenados, ou seja
+        // esse arquivo final tem o mesmo tamanho q o primeiro arquivo
+        Arquivo arquivoAux = new Arquivo("arqAux.dat");
+        arquivoAux.truncate(0); // limpa esse arq movendo o EOF
+        arquivoAux.truncate(tl); // preenche com lixo os registros p eu poder usar
+
+
+        for (int i = tl - 1; i >= 0 ; i--)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+            digito = obterDigito(regAux.getNumero(), d);
+            pos = count[digito] - 1;
+
+            arquivoAux.seekArq(pos);
+            regAux.gravaNoArq(arquivoAux.arquivo);
+            count[digito]--;
+        }
+
+        // por fim, basta copiar de volta para o arquivo original
+
+        for (int i = 0; i < tl; i++)
+        {
+            arquivoAux.seekArq(i);
+            regAux.leDoArq(arquivoAux.arquivo);
+
+            seekArq(i);
+            regAux.gravaNoArq(arquivo);
+        }
+
+        arquivoAux.fecharArq(); // fecha o arquivo
+    }
+
+    public void radixSort()
+    {
+        int d=0, tl = filesize();
+        Registro regAux = new Registro();
+
+        // devemos criar uma repeticao para achar o maior numero dessa lista
+        // na verdade achar a quantidade maxima de digitos desse maior numero
+        for (int i = 0; i < tl; i++)
+        {
+            seekArq(i);
+            regAux.leDoArq(arquivo);
+            if(contaDigitosNum(regAux.getNumero()) > d)
+                d = contaDigitosNum(regAux.getNumero());
+        }
+
+        // d é a quantidade máxima de digitos dos elemtentos da lista
+
+        // com isso, basta chamar algum método que vai ordenando por digito
+        // o mais recomendavel é o counting, entretanto não poderia simplesmente
+        // chamar o método de couting que criei acima, por que ele ordena
+        // com base no valor inteiro, aqui no radix, queremos ir ordenando
+        // cada vez por um único digito especifico, seja ele o menos significativo
+        //  e por aí vai, por isso, a necessidade de criar um countSortRadix
+        for (int i = 1; i <= d; i++)
+            countSortRadix(i);
     }
 
     public void geraArquivoOrdenado() {
@@ -396,6 +604,4 @@ public class Arquivo {
             inserirRegNoFinal(new Registro(random.nextInt(100)));
         }
     }
-
-
 }

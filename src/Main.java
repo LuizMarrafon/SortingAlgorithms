@@ -9,6 +9,7 @@ void main() {
     //arquivo.shell_sort();
     //arquivo.bubble_sort();
     //arquivo.shake_sort();
+    arquivo.radixSort();
 
     System.out.println();
     arquivo.exibir();
