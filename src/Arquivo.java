@@ -428,7 +428,8 @@ public class Arquivo {
     // também bem parecido com o bolha, mas quando efetua a troca
     // o elemento maior fica "marcado", para comparar os elementos
     // que vem antes dele e vai comparando de "tras para frente"
-    public void gnomeSort() {
+    public void gnomeSort()
+    {
         Registro regPos = new Registro();
         Registro regPosAnt = new Registro(); // tem q criar o regPosAnt pq la na lista
         // era duplamente encadeada, daí tinha acesso ao nó anteior, já no arquivo
@@ -438,13 +439,16 @@ public class Arquivo {
         regPosAnt.leDoArq(arquivo);
         regPos.leDoArq(arquivo);
         while (pos != tl) {
-            if (pos == 0 || regPos.getNumero() >= regPosAnt.getNumero()) {
+            if (pos == 0 || regPos.getNumero() >= regPosAnt.getNumero())
+            {
                 pos++;
                 posAnt++;
                 seekArq(posAnt);
                 regPosAnt.leDoArq(arquivo);
                 regPos.leDoArq(arquivo);
-            } else {
+            }
+            else
+            {
                 aux = regPosAnt.getNumero();
                 regPosAnt.setNumero(regPos.getNumero());
                 seekArq(posAnt);
