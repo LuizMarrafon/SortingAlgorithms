@@ -11,8 +11,8 @@ void main() {
     //arquivo.shake_sort();
     //arquivo.quickSemPivo();
     //arquivo.quickComPivo();
-    //arquivo.bucket_sort();
-    arquivo.merge_sort();
+    arquivo.bucket_sort();
+    //arquivo.merge_sort();
 
     System.out.println();
     arquivo.exibir();
