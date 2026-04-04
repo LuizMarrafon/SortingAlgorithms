@@ -1,4 +1,5 @@
-void main() {
+void main() throws IOException {
+    /*
     Arquivo arquivo = new Arquivo("teste.dat");
     arquivo.geraArquivoRandomico();
     arquivo.exibir();
@@ -18,4 +19,8 @@ void main() {
     arquivo.exibir();
 
     //arrumar insercao binaria, insercao direta, shell
+
+     */
+    Principal principal = new Principal();
+    principal.gerarTabela();
 }

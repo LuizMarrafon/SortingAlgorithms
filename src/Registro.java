@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class Registro {
-    public final int tf=8;
+    public final int tf=1024;
     private int numero; //4 bytes
     private char lixo[] = new char[tf]; //2044 bytes
 
@@ -39,7 +39,7 @@ public class Registro {
         //char lixo[] = new char[tf]; 2044 bytes
         //--------------------------------------
         // 2048 bytes
-        return(20);
+        return(2048);
     }
 
     public int getNumero() {
