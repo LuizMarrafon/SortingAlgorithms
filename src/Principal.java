@@ -72,45 +72,30 @@ public class Principal {
         arqRev.geraArquivoReverso();
         arqRand.geraArquivoRandomico();
 
-        //insercaoDireta(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //insercaoBinaria(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //selecaoDireta(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //bubbleSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //shakeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //shellSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //heapSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //quickSemPivo(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //quickComPivo(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //mergeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);      // Merge impl 1
+        insercaoDireta(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        insercaoBinaria(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        selecaoDireta(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        bubbleSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        shakeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        shellSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        heapSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        quickSemPivo(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        quickComPivo(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        mergeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);      // Merge impl 1
         mergeSort2(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);     // Merge impl 2
 
         // Pesquisados na literatura
-        //countingSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //bucketSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //radixSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //combSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
-        //gnomeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        countingSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        bucketSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        radixSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        combSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
+        gnomeSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
         timSort(arqOrd, arqRev, arqRand, auxRand, auxRev, arq);
 
 
         arq.close();
         exibirTabela();
-
     }
-
-    public FileWriter iniciaTabela() throws IOException {
-        FileWriter arq = new FileWriter("Tabela1.txt");
-
-        PrintWriter gravarArq = new PrintWriter(arq);
-        gravarArq.printf("__________________________________________________________________________________________________________________________________________________________________________________________________________________________%n");
-        gravarArq.printf("|Métodos Ordenação | \t\t\tArquivo Ordenado\t\t\t | \t\t\tArquivo em Ordem Reversa\t\t\t | \t\t\tArquivo Randômico\t\t\t |%n");
-        gravarArq.printf("_________________________________________________________________________________________________________________________________________________________________________________________________________________________|%n");
-        gravarArq.printf("\t\t | Comp. Prog. *| Comp. Equa. #| Mov. Prog. +| Mov. Equa. -| Tempo | Comp. Prog. *| Comp. Equa. #| Mov. Prog. +| Mov. Equa. -| Tempo | Comp. Prog. *| Comp. Equa. #| Mov. Prog. +| Mov. Equa. -| Tempo |%n");
-        gravarArq.printf("_________________________________________________________________________________________________________________________________________________________________________________________________________________________|%n");
-
-        return arq;
-    }
-
 
     public void exibirTabela() throws FileNotFoundException, IOException{
 
@@ -124,12 +109,48 @@ public class Principal {
         }
     }
 
-    private void gravaLinhaTabela(FileWriter arq, String metodo, int compOrd, int compRev, int compRand, int movOrd, int movRev, int movRand, double compEquaOrd, double compEquaRev,
-                                  double compEquaRand, double movEquaOrd, double movEquaRev, double movEquaRand,int ttotalOrd, int ttotalRev, int ttotalRand) throws IOException{
-        PrintWriter gravarArq = new PrintWriter(arq);
+    public FileWriter iniciaTabela() throws IOException {
+        FileWriter arq = new FileWriter("Tabela1.txt");
+        PrintWriter gravarArq = new PrintWriter(arq, true);
 
-        gravarArq.printf("" + metodo + "    |\t" + String.format("%-6.6s", compOrd) + "\t  |\t" + String.format("%-6.6s", compEquaOrd) + "\t |      " + String.format("%-6.6s", movOrd) + " |      " + String.format("%-2.6s", movEquaOrd) + " |\t" + String.format("%-2.6s", ttotalOrd) + "   |\t    " + String.format("%-6.6s", compRev) + "  |\t  " + String.format("%-6.6s", compEquaRev) + "   |\t " + String.format("%-6.6s", movRev) + "  | \t" + String.format("%-6.6s", movEquaRev) + " |  " + String.format("%-2.6s", ttotalRev) + "   |     " + String.format("%-6.6s", compRand) + "   |\t  " + String.format("%-6.6s", compEquaRand) + "     |\t    " + String.format("%-6.6s", movRand) + " |\t " + String.format("%-6.6s", movEquaRand) + "  |  " + String.format("%-4.6s", ttotalRand) + " |%n");
-        gravarArq.printf("_________________________________________________________________________________________________________________________________________________________________________________________________________________________|%n");
+        String sep = "+------------------+----------+----------+----------+----------+-------+----------+----------+----------+----------+-------+----------+----------+----------+----------+-------+";
+        String header1 = String.format("| %-16s | %-41s | %-41s | %-41s |%n",
+                "Métodos Ordenação",
+                "         Arquivo Ordenado",
+                "       Arquivo Ordem Reversa",
+                "        Arquivo Randômico");
+        String header2 = String.format("| %-16s | %-8s | %-8s | %-8s | %-8s | %-5s | %-8s | %-8s | %-8s | %-8s | %-5s | %-8s | %-8s | %-8s | %-8s | %-5s |%n",
+                "",
+                "Comp Prog", "Comp Equa", "Mov Prog", "Mov Equa", "Tempo",
+                "Comp Prog", "Comp Equa", "Mov Prog", "Mov Equa", "Tempo",
+                "Comp Prog", "Comp Equa", "Mov Prog", "Mov Equa", "Tempo");
+
+        gravarArq.println(sep);
+        gravarArq.print(header1);
+        gravarArq.println(sep);
+        gravarArq.print(header2);
+        gravarArq.println(sep);
+
+        return arq;
+    }
+
+    private void gravaLinhaTabela(FileWriter arq, String metodo,
+                                  int compOrd, int compRev, int compRand,
+                                  int movOrd,  int movRev,  int movRand,
+                                  double compEquaOrd, double compEquaRev, double compEquaRand,
+                                  double movEquaOrd,  double movEquaRev,  double movEquaRand,
+                                  int ttotalOrd, int ttotalRev, int ttotalRand) throws IOException {
+
+        PrintWriter gravarArq = new PrintWriter(arq, true);
+
+        gravarArq.printf("| %-16s | %-8d | %-8.1f | %-8d | %-8.1f | %-5d | %-8d | %-8.1f | %-8d | %-8.1f | %-5d | %-8d | %-8.1f | %-8d | %-8.1f | %-5d |%n",
+                metodo,
+                compOrd, compEquaOrd, movOrd, movEquaOrd, ttotalOrd,
+                compRev, compEquaRev, movRev, movEquaRev, ttotalRev,
+                compRand, compEquaRand, movRand, movEquaRand, ttotalRand);
+
+        String sep = "+------------------+----------+----------+----------+----------+-------+----------+----------+----------+----------+-------+----------+----------+----------+----------+-------+";
+        gravarArq.println(sep);
     }
 
     public void insercaoDireta(Arquivo arqOrd, Arquivo arqRev, Arquivo arqRand, Arquivo auxRand, Arquivo auxRev, FileWriter arq) throws IOException {
@@ -683,7 +704,7 @@ public class Principal {
 
         gravaLinhaTabela(
                 arq,
-                "Merge",
+                "Merge 2",
                 compOrd, compRev, compRand,
                 movOrd, movRev, movRand,
                 0, 0, 0,   // Comp. Equa.

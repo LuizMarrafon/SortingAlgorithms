@@ -6,8 +6,6 @@ public class Arquivo
     private String nomearquivo;
     private RandomAccessFile arquivo;
     private int comp, mov;
-    private int quickSPTotalParticoes, quickSPParticoesConcluidas, quickSPUltimoPercentual;
-    private int quickCPTotalParticoes, quickCPParticoesConcluidas, quickCPUltimoPercentual;
 
     public Arquivo(String nomearquivo)
     {
@@ -143,9 +141,6 @@ public class Arquivo
         int menor, tl = filesize(), posmenor;
         for (int i = 0; i < tl-1; i++)
         {
-            if (i % 100 == 0) {
-                System.out.println("Selecao direta: " + i + "/" + tl);
-            }
             seekArq(i);
             regi.leDoArq(arquivo);
             menor = regi.getNumero();
@@ -282,12 +277,8 @@ public class Arquivo
         int pos;
         Registro aux = new Registro();
         Registro reg = new Registro();
-        System.out.println("Insercao binaria: 0/" + tl);
         for (int i = 1; i < tl; i++)
         {
-            if (i % 100 == 0) {
-                System.out.println("Insercao direta: " + i + "/" + tl);
-            }
             seekArq(i);
             aux.leDoArq(arquivo);
             pos = buscaBinaria(aux.getNumero(), i);
@@ -309,10 +300,8 @@ public class Arquivo
     {
         int pai, f1, f2, tl = filesize(), maior;
         int total = tl;
-        int ultimoPercentual = -1;
         Registro reg1 = new Registro();
         Registro reg2 = new Registro();
-        System.out.println("Heap sort: 0%");
         while(tl > 1){
             for(pai = tl/2-1; pai >= 0; pai--)
             {
@@ -354,14 +343,7 @@ public class Arquivo
             seekArq(tl-1);
             reg1.gravaNoArq(arquivo);
             tl--;
-            int percentual = ((total - tl) * 100) / total;
-            if(percentual >= ultimoPercentual + 10)
-            {
-                ultimoPercentual = percentual;
-                System.out.println("Heap sort: " + percentual + "%");
-            }
         }
-        System.out.println("Heap sort: 100%");
     }
 
     public void shell_sort()
@@ -407,13 +389,8 @@ public class Arquivo
 
     public void quickSemPivo(){
         int tl = filesize();
-        quickSPTotalParticoes = Math.max(1, tl - 1);
-        quickSPParticoesConcluidas = 0;
-        quickSPUltimoPercentual = -1;
-        System.out.println("Quick sem pivo: 0%");
         if (tl > 1)
             quickSP(0, tl-1);
-        System.out.println("Quick sem pivo: 100%");
     }
 
     public void quickSP(int ini, int fim)
@@ -458,13 +435,6 @@ public class Arquivo
             regI.gravaNoArq(arquivo);
             flag = !flag;
         }
-        quickSPParticoesConcluidas++;
-        int percentual = (quickSPParticoesConcluidas * 100) / quickSPTotalParticoes;
-        if(percentual >= quickSPUltimoPercentual + 10)
-        {
-            quickSPUltimoPercentual = percentual;
-            System.out.println("Quick sem pivo: " + percentual + "%");
-        }
         if(ini < i-1)
             quickSP(ini, i-1);
         if(j+1 < fim)
@@ -475,13 +445,8 @@ public class Arquivo
 
     public void quickComPivo(){
         int tl = filesize();
-        quickCPTotalParticoes = Math.max(1, tl - 1);
-        quickCPParticoesConcluidas = 0;
-        quickCPUltimoPercentual = -1;
-        System.out.println("Quick com pivo: 0%");
         if (tl > 1)
             quickCP(0, tl-1);
-        System.out.println("Quick com pivo: 100%");
     }
 
     public void quickCP(int ini, int fim)
@@ -528,13 +493,6 @@ public class Arquivo
                 i++;
                 j--;
             }
-        }
-        quickCPParticoesConcluidas++;
-        int percentual = (quickCPParticoesConcluidas * 100) / quickCPTotalParticoes;
-        if(percentual >= quickCPUltimoPercentual + 10)
-        {
-            quickCPUltimoPercentual = percentual;
-            System.out.println("Quick com pivo: " + percentual + "%");
         }
         if(ini < j)
             quickCP(ini, j);
